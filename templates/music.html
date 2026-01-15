@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Music Player - Spotified</title>
+
+    <!-- Flask static CSS imports -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/fonts.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/mobile-fixes.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/player.css') }}">
+
+    <!-- Google Fonts (external is fine) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap"
+        rel="stylesheet">
+</head>
+
+<body style="margin:0; padding:0; background:#121212; font-family:Arial, sans-serif; color:#fff;">
+
+    <!-- Mobile header with hamburger -->
+    <div class="mobile-header" id="mobileHeaderContainer">
+        <button class="hamburger-btn" id="hamburgerBtn">☰</button>
+        <div class="mobile-logo">
+            <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="#1db954" class="bi bi-apple-music"
+                viewBox="0 0 16 16">
+                <path fill-rule="evenodd"
+                    d="m10.995 0 .573.001q.241 0 .483.007c.35.01.705.03 1.051.093.352.063.68.166.999.329a3.36 3.36 0 0 1 1.47 1.468c.162.32.265.648.328 1 .063.347.084.7.093 1.051q.007.241.007.483l.001.573v5.99l-.001.573q0 .241-.008.483c-.01.35-.03.704-.092 1.05a3.5 3.5 0 0 1-.33 1 3.36 3.36 0 0 1-1.468 1.468 3.5 3.5 0 0 1-1 .33 7 7 0 0 1-1.05.092q-.241.007-.483.008l-.573.001h-5.99l-.573-.001q-.241 0-.483-.008a7 7 0 0 1-1.052-.092 3.6 3.6 0 0 1-.998-.33 3.36 3.36 0 0 1-1.47-1.468 3.6 3.6 0 0 1-.328-1 7 7 0 0 1-.093-1.05Q.002 11.81 0 11.568V5.005l.001-.573q0-.241.007-.483c.01-.35.03-.704.093-1.05a3.6 3.6 0 0 1 .329-1A3.36 3.36 0 0 1 1.9.431 3.5 3.5 0 0 1 2.896.1 7 7 0 0 1 3.95.008Q4.19.002 4.432 0h.573zm-.107 2.518-4.756.959H6.13a.66.66 0 0 0-.296.133.5.5 0 0 0-.16.31c-.004.027-.01.08-.01.16v5.952c0 .14-.012.275-.106.39-.095.115-.21.15-.347.177l-.31.063c-.393.08-.65.133-.881.223a1.4 1.4 0 0 0-.519.333 1.25 1.25 0 0 0-.332.995c.031.297.166.582.395.792.156.142.35.25.578.296.236.047.49.031.858-.043.196-.04.38-.102.555-.205a1.4 1.4 0 0 0 .438-.405 1.5 1.5 0 0 0 .233-.55c.042-.202.052-.386.052-.588V6.347c0-.276.08-.35.302-.404.024-.005 3.954-.797 4.138-.833.257-.049.378.025.378.294v3.524c0 .14-.001.28-.096.396-.094.115-.211.15-.348.178l-.31.062c-.393.08-.649.133-.88.223a1.4 1.4 0 0 0-.52.334 1.26 1.26 0 0 0-.34.994c.03.297.174.582.404.792a1.2 1.2 0 0 0 .577.294c.237.048.49.03.858-.044.197-.04.381-.098.556-.202a1.4 1.4 0 0 0 .438-.405q.173-.252.233-.549a2.7 2.7 0 0 0 .044-.589V2.865c0-.273-.143-.443-.4-.42-.04.003-.383.064-.424.073" />
+            </svg>
+        </div>
+        <div class="home">
+            <a href="/" style="color: inherit; text-decoration: none;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor"
+                    class="bi bi-house-door-fill" viewBox="0 0 16 16">
+                    <path
+                        d="M6.5 14.5v-3.505c0-.245.25-.495.5-.495h2c.25 0 .5.25.5.5v3.5a.5.5 0 0 0 .5.5h4a.5.5 0 0 0 .5-.5v-7a.5.5 0 0 0-.146-.354L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293L8.354 1.146a.5.5 0 0 0-.708 0l-6 6A.5.5 0 0 0 1.5 7.5v7a.5.5 0 0 0 .5.5h4a.5.5 0 0 0 .5-.5" />
+                </svg>
+            </a>
+        </div>
+        <div class="user-avatar" id="userAvatar">
+            <img id="avatarImg" src="https://ui-avatars.com/api/?name=User" alt="User Avatar"
+                style="width:32px; height:32px; border-radius:50%;">
+        </div>
+    </div>
+
+    <!-- Mobile drawer overlay -->
+    <div class="drawer-overlay" id="drawerOverlay"></div>
+
+    <!-- Mobile drawer sidebar -->
+    <div class="mobile-drawer" id="mobileDrawer">
+        <div class="drawer-section">Playlists</div>
+        <div id="mobileDrawerPlaylists"></div>
+    </div>
+
+    <div class="sidebar">
+        <div class="logo-container">
+            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="currentColor" class="bi bi-apple-music"
+                viewBox="0 0 16 16">
+                <path fill-rule="evenodd"
+                    d="m10.995 0 .573.001q.241 0 .483.007c.35.01.705.03 1.051.093.352.063.68.166.999.329a3.36 3.36 0 0 1 1.47 1.468c.162.32.265.648.328 1 .063.347.084.7.093 1.051q.007.241.007.483l.001.573v5.99l-.001.573q0 .241-.008.483c-.01.35-.03.704-.092 1.05a3.5 3.5 0 0 1-.33 1 3.36 3.36 0 0 1-1.468 1.468 3.5 3.5 0 0 1-1 .33 7 7 0 0 1-1.05.092q-.241.007-.483.008l-.573.001h-5.99l-.573-.001q-.241 0-.483-.008a7 7 0 0 1-1.052-.092 3.6 3.6 0 0 1-.998-.33 3.36 3.36 0 0 1-1.47-1.468 3.6 3.6 0 0 1-.328-1 7 7 0 0 1-.093-1.05Q.002 11.81 0 11.568V5.005l.001-.573q0-.241.007-.483c.01-.35.03-.704.093-1.05a3.6 3.6 0 0 1 .329-1A3.36 3.36 0 0 1 1.9.431 3.5 3.5 0 0 1 2.896.1 7 7 0 0 1 3.95.008Q4.19.002 4.432 0h.573zm-.107 2.518-4.756.959H6.13a.66.66 0 0 0-.296.133.5.5 0 0 0-.16.31c-.004.027-.01.08-.01.16v5.952c0 .14-.012.275-.106.39-.095.115-.21.15-.347.177l-.31.063c-.393.08-.65.133-.881.223a1.4 1.4 0 0 0-.519.333 1.25 1.25 0 0 0-.332.995c.031.297.166.582.395.792.156.142.35.25.578.296.236.047.49.031.858-.043.196-.04.38-.102.555-.205a1.4 1.4 0 0 0 .438-.405 1.5 1.5 0 0 0 .233-.55c.042-.202.052-.386.052-.588V6.347c0-.276.08-.35.302-.404.024-.005 3.954-.797 4.138-.833.257-.049.378.025.378.294v3.524c0 .14-.001.28-.096.396-.094.115-.211.15-.348.178l-.31.062c-.393.08-.649.133-.88.223a1.4 1.4 0 0 0-.52.334 1.26 1.26 0 0 0-.34.994c.03.297.174.582.404.792a1.2 1.2 0 0 0 .577.294c.237.048.49.03.858-.044.197-.04.381-.098.556-.202a1.4 1.4 0 0 0 .438-.405q.173-.252.233-.549a2.7 2.7 0 0 0 .044-.589V2.865c0-.273-.143-.443-.4-.42-.04.003-.383.064-.424.073" />
+            </svg>
+            <div>
+                <p class="ubuntu-regular">Spotified</p>
+            </div>
+        </div>
+
+        <div class="sidebar-section">
+            <b>Playlists</b>
+        </div>
+
+        <div class="sidebar-section" id="playlists-sidebar">
+            <!-- Playlists will be loaded here -->
+        </div>
+    </div>
+
+    <div style="margin-left:240px; padding-left: 20px; width: 100%;">
+        <header class="header-container">
+            <div class="home">
+                <a href="/" style="color: inherit; text-decoration: none;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor"
+                        class="bi bi-house-door-fill" viewBox="0 0 16 16">
+                        <path
+                            d="M6.5 14.5v-3.505c0-.245.25-.495.5-.495h2c.25 0 .5.25.5.5v3.5a.5.5 0 0 0 .5.5h4a.5.5 0 0 0 .5-.5v-7a.5.5 0 0 0-.146-.354L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293L8.354 1.146a.5.5 0 0 0-.708 0l-6 6A.5.5 0 0 0 1.5 7.5v7a.5.5 0 0 0 .5.5h4a.5.5 0 0 0 .5-.5" />
+                    </svg>
+                </a>
+            </div>
+            <div class="user-avatar" id="userAvatarDesktop">
+                <img id="avatarImgDesktop" src="https://ui-avatars.com/api/?name=User" alt="User Avatar"
+                    style="width:32px; height:32px; border-radius:50%;">
+            </div>
+        </header>
+
+        <main>
+            <!-- Player and Playlist Container -->
+            <div class="player-container-wrapper">
+
+                <!-- PLAYER -->
+                <div class="player-card">
+
+                    <div class="album-cover" id="albumCover">
+                        <div class="album-placeholder">♪</div>
+                    </div>
+
+                    <div class="song-details">
+                        <h1 class="song-title" id="songTitle">No Song Selected</h1>
+                        <p class="song-artist" id="songArtist">Unknown Artist</p>
+                        <p class="song-album" id="songAlbum">Unknown Album</p>
+                    </div>
+
+                    <!-- CONTROLS FIRST (IMPORTANT FIX) -->
+                    <div class="player-controls">
+                        <button class="control-btn" id="prevBtn"><svg xmlns="http://www.w3.org/2000/svg" width="48"
+                                height="48" fill="#ccc" class="bi bi-skip-backward-circle-fill" viewBox="0 0 16 16">
+                                <path
+                                    d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0m-4.79-2.907L8.5 7.028V5.5a.5.5 0 0 0-.79-.407L5 7.028V5.5a.5.5 0 0 0-1 0v5a.5.5 0 0 0 1 0V8.972l2.71 1.935a.5.5 0 0 0 .79-.407V8.972l2.71 1.935A.5.5 0 0 0 12 10.5v-5a.5.5 0 0 0-.79-.407" />
+                            </svg>
+
+                            <button class="control-btn-play" id="playBtn">
+                                <svg class="play-icon" xmlns="http://www.w3.org/2000/svg" width="48" height="48"
+                                    fill="#1ed760" class="bi bi-play-circle-fill" viewBox="0 0 16 16">
+                                    <path
+                                        d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M6.79 5.093A.5.5 0 0 0 6 5.5v5a.5.5 0 0 0 .79.407l3.5-2.5a.5.5 0 0 0 0-.814z" />
+                                </svg>
+
+                                <svg class="pause-icon" style="display: none;" xmlns="http://www.w3.org/2000/svg"
+                                    width="48" height="48" fill="#1ed760" class="bi bi-pause-circle-fill"
+                                    viewBox="0 0 16 16">
+                                    <path
+                                        d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M6.25 5C5.56 5 5 5.56 5 6.25v3.5a1.25 1.25 0 1 0 2.5 0v-3.5C7.5 5.56 6.94 5 6.25 5m3.5 0c-.69 0-1.25.56-1.25 1.25v3.5a1.25 1.25 0 1 0 2.5 0v-3.5C11 5.56 10.44 5 9.75 5" />
+                                </svg>
+                            </button>
+
+                            <button class="control-btn" id="nextBtn"><svg xmlns="http://www.w3.org/2000/svg" width="48"
+                                    height="48" fill="#ccc" class="bi bi-skip-forward-circle-fill" viewBox="0 0 16 16">
+                                    <path
+                                        d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M4.79 5.093A.5.5 0 0 0 4 5.5v5a.5.5 0 0 0 .79.407L7.5 8.972V10.5a.5.5 0 0 0 .79.407L11 8.972V10.5a.5.5 0 0 0 1 0v-5a.5.5 0 0 0-1 0v1.528L8.29 5.093a.5.5 0 0 0-.79.407v1.528z" />
+                                </svg></button>
+                    </div>
+
+                    <!-- PROGRESS AFTER -->
+                    <div class="progress-section">
+                        <div class="progress-bar" id="progressBar">
+                            <div class="progress-fill" id="progressFill"></div>
+                        </div>
+                        <div class="time-display">
+                            <span id="currentTime">0:00</span>
+                            <span id="duration">0:00</span>
+                        </div>
+                    </div>
+
+                    <!-- VOLUME -->
+                    <div class="volume-section">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                            class="bi bi-speaker-fill" viewBox="0 0 16 16">
+                            <path d="M9 4a1 1 0 1 1-2 0 1 1 0 0 1 2 0m-2.5 6.5a1.5 1.5 0 1 1 3 0 1.5 1.5 0 0 1-3 0" />
+                            <path
+                                d="M4 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zm6 4a2 2 0 1 1-4 0 2 2 0 0 1 4 0M8 7a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7" />
+                        </svg>
+                        <div class="volume-slider" id="volumeSlider">
+                            <div class="volume-fill" id="volumeFill"></div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- PLAYLIST -->
+                <div class="playlist-sidebar">
+                    <h2 id="playlistTitle">Your Songs</h2>
+                    <div class="playlist-list" id="playlistContainer"></div>
+                </div>
+
+            </div>
+
+        </main>
+    </div>
+
+    <audio id="audioPlayer"></audio>
+
+    <script>
+        // ========== AUTHENTICATION HELPERS ==========
+        function getToken() {
+            return localStorage.getItem('auth_token');
+        }
+
+        async function api(url, opts = {}) {
+            const token = getToken();
+            if (!token) {
+                window.location.href = '/login';
+                return null;
+            }
+
+            const headers = opts.headers || {};
+            headers['Authorization'] = `Bearer ${token}`;
+            if (!headers['Content-Type'] && opts.body && typeof opts.body === 'string') {
+                headers['Content-Type'] = 'application/json';
+            }
+
+            const response = await fetch(url, { ...opts, headers });
+
+            if (response.status === 401) {
+                localStorage.removeItem('auth_token');
+                localStorage.removeItem('user');
+                window.location.href = '/login';
+                return null;
+            }
+
+            return response;
+        }
+
+        function escapeHtml(text) {
+            const map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' };
+            return text.replace(/[&<>"']/g, m => map[m]);
+        }
+
+        // ========== PLAYER STATE ==========
+        let currentSongIndex = 0;
+        let playlist = [];
+        let isPlaying = false;
+        const audioPlayer = document.getElementById('audioPlayer');
+        const playBtn = document.getElementById('playBtn');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const progressBar = document.getElementById('progressBar');
+        const progressFill = document.getElementById('progressFill');
+        const currentTimeEl = document.getElementById('currentTime');
+        const durationEl = document.getElementById('duration');
+        const volumeSlider = document.getElementById('volumeSlider');
+        const volumeFill = document.getElementById('volumeFill');
+        const albumCover = document.getElementById('albumCover');
+        const songTitle = document.getElementById('songTitle');
+        const songArtist = document.getElementById('songArtist');
+        const songAlbum = document.getElementById('songAlbum');
+        const playlistContainer = document.getElementById('playlistContainer');
+
+        // ========== DATA LOADING ==========
+        async function loadData() {
+            try {
+                const [songsRes, playlistsRes, userRes] = await Promise.all([
+                    api('/api/user/songs'),
+                    api('/api/user/playlists'),
+                    api('/api/user')
+                ]);
+
+                if (!songsRes || !playlistsRes || !userRes) return;
+
+                const songs = await songsRes.json();
+                const playlists = await playlistsRes.json();
+                const user = await userRes.json();
+
+                renderPlaylists(playlists || []);
+                const avatarUrl = user.avatar || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(user.name);
+                document.getElementById('avatarImg').src = avatarUrl;
+                document.getElementById('avatarImgDesktop').src = avatarUrl;
+            } catch (error) {
+                console.error('Error loading data:', error);
+            }
+        }
+
+        window.addEventListener('load', loadData);
+
+        // ========== LOAD INITIAL SONG ==========
+        function loadInitialSong() {
+            const storedPlaylist = sessionStorage.getItem('playlistSongs');
+            const startIndex = sessionStorage.getItem('playlistStartIndex');
+
+            if (storedPlaylist) {
+                playlist = JSON.parse(storedPlaylist);
+                currentSongIndex = Number.isInteger(+startIndex) ? +startIndex : 0;
+
+                renderPlaylist();
+                loadSong(playlist[currentSongIndex]);
+                play();
+                updatePlaylistHighlight();
+                return;
+            }
+
+            // fallback: user's full library
+            loadPlaylist();
+        }
+
+
+
+        function loadSong(song) {
+            // textContent é seguro por definição (no HTML injection)
+            songTitle.textContent = song.title || '';
+            songArtist.textContent = song.artist || '';
+            songAlbum.textContent = song.album || 'Unknown Album';
+
+            const coverImg = song.cover_url;
+
+            albumCover.innerHTML = `
+        <img 
+            src="${coverImg}" 
+            alt="${escapeHtml(song.title || '')}" 
+            style="width:100%; height:100%; object-fit:cover; border-radius:16px;"
+        >
+    `;
+
+            const token = getToken();
+            audioPlayer.src = `/api/songs/${song.id}/play?token=${encodeURIComponent(token)}`;
+            audioPlayer.load();
+        }
+
+
+        async function loadPlaylist() {
+            try {
+                const res = await api('/api/user/songs');
+                if (!res || !res.ok) return;
+                const data = await res.json();
+                playlist = data.songs || [];
+                renderPlaylist();
+
+                if (playlist.length > 0) {
+                    loadSong(playlist[0]);
+                    currentSongIndex = 0;
+                }
+            } catch (e) {
+                console.error('Error loading playlist:', e);
+            }
+        }
+
+        const playlistName = sessionStorage.getItem('playlistName');
+        if (playlistName) {
+            document.getElementById('playlistTitle').textContent = playlistName;
+        }
+
+
+        function renderPlaylists(playlists) {
+            // Render in sidebar
+            const sidebarContainer = document.getElementById('playlists-sidebar');
+            sidebarContainer.innerHTML = '';
+            playlists.forEach(p => {
+                const div = document.createElement('div');
+                div.className = 'sidebar-playlist';
+                div.innerHTML = `
+                <div style="background-image: url('${p.image}'); width:36px; height:36px; border-radius:4px; display:flex; align-items:center; justify-content:center;">
+                </div>
+                <a href="/playlists?id=${p.id}" class="sidebar-link" style="flex-grow:1;">
+                    <span class="sidebar-link-text">${escapeHtml(p.name)}</span>
+                </a>
+            `;
+                sidebarContainer.appendChild(div);
+            });
+        }
+
+        function renderPlaylist() {
+            playlistContainer.innerHTML = '';
+            playlist.forEach((song, index) => {
+                const card = document.createElement('div');
+                card.className = 'tile';
+                card.id = `song-${index}`;
+                const coverImg = song.cover_url || 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 150 150"%3E%3Crect fill="%231db954" width="150" height="150"/%3E%3Ctext x="50%25" y="50%25" font-size="48" fill="white" text-anchor="middle" dy=".3em"%3E♪%3C/text%3E%3C/svg%3E';
+                card.innerHTML = `
+                    <div style="width:100%; height:150px; background-image: url('${coverImg}'); background-size: cover; background-position: center; border-radius:8px; display:flex; align-items:center; justify-content:center;">
+                        ${!song.cover_url ? '<span style="font-size:48px;">♪</span>' : ''}
+                    </div>
+                    <div class="title">${song.title}</div>
+                    <div class="subtitle">${song.artist}</div>
+                `;
+                card.addEventListener('click', () => {
+                    currentSongIndex = index;
+                    loadSong(playlist[index]);
+                    play();
+                    updatePlaylistHighlight();
+                });
+                playlistContainer.appendChild(card);
+            });
+            updatePlaylistHighlight();
+        }
+
+        function updatePlaylistHighlight() {
+            document.querySelectorAll('#playlistContainer .tile').forEach((el, i) => {
+                el.style.opacity = i === currentSongIndex ? '1' : '0.7';
+                el.style.border = i === currentSongIndex ? '2px solid #1db954' : 'none';
+            });
+        }
+
+        function saveCurrentSong() {
+            localStorage.setItem('currentSongIndex', currentSongIndex);
+            localStorage.setItem('currentPlaylist', JSON.stringify(playlist));
+        }
+
+        function loadSavedSong() {
+            const savedPlaylist = localStorage.getItem('currentPlaylist');
+            const savedIndex = localStorage.getItem('currentSongIndex');
+
+            if (savedPlaylist && savedIndex !== null) {
+                playlist = JSON.parse(savedPlaylist);
+                currentSongIndex = Number(savedIndex);
+                renderPlaylist();
+                loadSong(playlist[currentSongIndex]);
+                updatePlaylistHighlight();
+                // Não tocar automaticamente para respeitar interação do usuário
+            } else {
+                loadPlaylist(); // fallback
+            }
+        }
+
+        // Sempre que a música mudar:
+        nextBtn.addEventListener('click', () => {
+            currentSongIndex = (currentSongIndex + 1) % playlist.length;
+            loadSong(playlist[currentSongIndex]);
+            updatePlaylistHighlight();
+            saveCurrentSong();
+            play();
+        });
+
+        prevBtn.addEventListener('click', () => {
+            currentSongIndex = (currentSongIndex - 1 + playlist.length) % playlist.length;
+            loadSong(playlist[currentSongIndex]);
+            updatePlaylistHighlight();
+            saveCurrentSong();
+            play();
+        });
+
+        // Também quando clicar numa música diretamente
+        playlistContainer.addEventListener('click', (e) => {
+            const tile = e.target.closest('.tile');
+            if (!tile) return;
+            const index = Number(tile.id.split('-')[1]);
+            currentSongIndex = index;
+            loadSong(playlist[index]);
+            updatePlaylistHighlight();
+            saveCurrentSong();
+            play();
+        });
+
+
+        // ========== PLAYER CONTROLS ==========
+        function play() {
+            audioPlayer.play();
+            isPlaying = true;
+            updatePlayButton();
+        }
+
+        function pause() {
+            audioPlayer.pause();
+            isPlaying = false;
+            updatePlayButton();
+        }
+
+        function updatePlayButton() {
+            document.querySelector('.play-icon').style.display = isPlaying ? 'none' : 'block';
+            document.querySelector('.pause-icon').style.display = isPlaying ? 'block' : 'none';
+        }
+
+        playBtn.addEventListener('click', () => {
+            if (isPlaying) pause();
+            else play();
+        });
+
+        nextBtn.addEventListener('click', () => {
+            currentSongIndex = (currentSongIndex + 1) % playlist.length;
+            loadSong(playlist[currentSongIndex]);
+            updatePlaylistHighlight();
+            play();
+        });
+
+        prevBtn.addEventListener('click', () => {
+            currentSongIndex = (currentSongIndex - 1 + playlist.length) % playlist.length;
+            loadSong(playlist[currentSongIndex]);
+            updatePlaylistHighlight();
+            play();
+        });
+
+        // ========== PROGRESS BAR ==========
+        audioPlayer.addEventListener('loadedmetadata', () => {
+            durationEl.textContent = formatTime(audioPlayer.duration);
+        });
+
+        audioPlayer.addEventListener('timeupdate', () => {
+            const percent = (audioPlayer.currentTime / audioPlayer.duration) * 100;
+            progressFill.style.width = percent + '%';
+            currentTimeEl.textContent = formatTime(audioPlayer.currentTime);
+        });
+
+        progressBar.addEventListener('click', (e) => {
+            const rect = progressBar.getBoundingClientRect();
+            const percent = (e.clientX - rect.left) / rect.width;
+            audioPlayer.currentTime = percent * audioPlayer.duration;
+        });
+
+        audioPlayer.addEventListener('ended', () => {
+            nextBtn.click();
+        });
+
+        // Captura erros de play e load
+        audioPlayer.addEventListener('error', () => {
+            console.warn('Erro ao carregar música, pulando para a próxima...');
+            nextBtn.click();
+        });
+
+
+        // ========== VOLUME CONTROL ==========
+        volumeSlider.addEventListener('click', (e) => {
+            const rect = volumeSlider.getBoundingClientRect();
+            const percent = (e.clientX - rect.left) / rect.width;
+            audioPlayer.volume = percent;
+            volumeFill.style.width = (percent * 100) + '%';
+        });
+
+        // ========== UTILITY ==========
+        function formatTime(seconds) {
+            if (!seconds || isNaN(seconds)) return '0:00';
+            const mins = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+        }
+
+        // ========== MOBILE HEADER & DRAWER ==========
+        function setupMobileHamburger() {
+            const hamburgerBtn = document.getElementById('hamburgerBtn');
+            const mobileDrawer = document.getElementById('mobileDrawer');
+            const drawerOverlay = document.getElementById('drawerOverlay');
+            const mobileDrawerPlaylists = document.getElementById('mobileDrawerPlaylists');
+
+            function openDrawer() {
+                mobileDrawer.classList.add('open');
+                drawerOverlay.classList.add('show');
+            }
+
+            function closeDrawer() {
+                mobileDrawer.classList.remove('open');
+                drawerOverlay.classList.remove('show');
+            }
+
+            hamburgerBtn.addEventListener('click', openDrawer);
+            drawerOverlay.addEventListener('click', closeDrawer);
+
+            async function loadDrawerPlaylists() {
+                try {
+                    const res = await api('/api/user/playlists');
+                    if (res && res.ok) {
+                        const playlists = await res.json();
+                        mobileDrawerPlaylists.innerHTML = '';
+                        playlists.forEach(p => {
+                            const link = document.createElement('a');
+                            link.className = 'drawer-playlist';
+                            link.href = `/playlists?id=${p.id}`;
+                            link.innerHTML = `
+                                <div style="background-image: url('${p.image}'); width:36px; height:36px; border-radius:4px; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                                </div>
+                                <div class="drawer-playlist-name">${escapeHtml(p.name)}</div>
+                            `;
+                            link.addEventListener('click', closeDrawer);
+                            mobileDrawerPlaylists.appendChild(link);
+                        });
+                    }
+                } catch (err) {
+                    console.error('Error loading drawer playlists:', err);
+                }
+            }
+
+            loadDrawerPlaylists();
+        }
+
+        setupMobileHamburger();
+
+        // ========== AVATAR LOGOUT ==========
+        function setupLogout() {
+            const avatarMobile = document.getElementById('userAvatar');
+            const avatarDesktop = document.getElementById('userAvatarDesktop');
+
+            function logout() {
+                if (confirm('Logout?')) {
+                    api('/api/logout', { method: 'POST' });
+                    localStorage.removeItem('auth_token');
+                    localStorage.removeItem('user');
+                    window.location.href = '/login';
+                }
+            }
+
+            if (avatarMobile) avatarMobile.addEventListener('click', logout);
+            if (avatarDesktop) avatarDesktop.addEventListener('click', logout);
+        }
+
+        setupLogout();
+
+        // ========== INITIALIZE ==========
+        window.addEventListener('load', () => {
+            loadInitialSong();
+            const avatarUrl = 'https://ui-avatars.com/api/?name=User';
+            document.getElementById('avatarImg').src = avatarUrl;
+            document.getElementById('avatarImgDesktop').src = avatarUrl;
+        });
+    </script>
+
+</body>
+
+</html>

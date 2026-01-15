@@ -1,0 +1,309 @@
+/* ================= GLOBAL RESET ================= */
+* {
+    box-sizing: border-box;
+    font-family: 'Rubik', sans-serif;
+}
+
+body {
+    margin: 0;
+    background: #121212;
+    color: #ffffff;
+}
+
+/* ================= LAYOUT ================= */
+.player-container-wrapper {
+    display: grid;
+    grid-template-columns: 360px 1fr;
+    gap: 32px;
+    padding: 40px 24px;
+    align-items: start;
+}
+
+/* ================= PLAYER CARD ================= */
+.player-card {
+    background: #181818;
+    border-radius: 20px;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: sticky;
+    top: 90px;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6);
+}
+
+/* ================= ALBUM COVER ================= */
+.album-cover {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    border-radius: 16px;
+    overflow: hidden;
+    margin-bottom: 24px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+    background: linear-gradient(135deg, #1db954, #1ed760);
+}
+
+.album-cover img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.album-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 96px;
+    color: white;
+}
+
+/* ================= SONG INFO ================= */
+.song-details {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.song-title {
+    font-size: 22px;
+    font-weight: 800;
+    margin: 0;
+}
+
+.song-artist,
+.song-album {
+    margin: 4px 0;
+    color: #aaa;
+    font-size: 14px;
+}
+
+/* ================= CONTROLS ================= */
+.player-controls {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    margin-bottom: 20px;
+    overflow: hidden;
+    height: 164px;
+}
+
+.control-btn {
+    background: transparent;
+    border: none;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    overflow: hidden;
+}
+
+.control-btn:hover {
+    background: #2a2a2a;
+    color: #fff;
+    transform: scale(1.08);
+}
+
+.control-btn-play {
+    border: none;
+    width: 70px;
+    height: 70px;
+    border-radius: 100%;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.play-btn:hover {
+    transform: scale(1.15);
+}
+
+/* ================= PROGRESS ================= */
+.progress-section {
+    width: 100%;
+    margin-bottom: 16px;
+}
+
+.progress-bar {
+    height: 6px;
+    background: #333;
+    border-radius: 6px;
+    cursor: pointer;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, #1db954, #1ed760);
+}
+
+.time-display {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    color: #aaa;
+    margin-top: 6px;
+}
+
+/* ================= VOLUME ================= */
+.volume-section {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    opacity: 0.8;
+}
+
+.volume-section:hover {
+    opacity: 1;
+}
+
+.volume-slider {
+    flex: 1;
+    height: 4px;
+    background: #333;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.volume-fill {
+    height: 100%;
+    width: 50%;
+    background: #1db954;
+}
+
+/* ================= PLAYLIST ================= */
+.playlist-sidebar {
+    background: #181818;
+    border-radius: 20px;
+    padding: 24px;
+    overflow-y: auto;
+    max-height: calc(100vh - 120px);
+}
+
+.playlist-sidebar h2 {
+    margin-top: 0;
+    margin-bottom: 16px;
+}
+
+/* Tile Grid */
+.playlist-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 16px;
+}
+
+/* ================= SONG TILE ================= */
+.tile {
+    background: #202020;
+    border-radius: 12px;
+    padding: 10px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.tile:hover {
+    background: #2a2a2a;
+    transform: translateY(-4px);
+}
+
+.tile .title {
+    font-size: 14px;
+    font-weight: 600;
+    margin-top: 6px;
+}
+
+.tile .subtitle {
+    font-size: 12px;
+    color: #aaa;
+}
+
+/* ================= RESPONSIVE ================= */
+
+/* Tablet */
+@media (max-width: 1024px) {
+    .player-container-wrapper {
+        grid-template-columns: 320px 1fr;
+        padding: 30px 16px;
+        gap: 24px;
+    }
+
+    .song-title {
+        font-size: 20px;
+    }
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+    body > div[style*="margin-left"] {
+        margin-left: 0 !important;
+        width: 100% !important;
+        padding-left: 0 !important;
+    }
+
+    .player-container-wrapper {
+        grid-template-columns: 1fr;
+        gap: 20px;
+        padding: 20px 12px;
+        margin-top: 70px;
+    }
+
+    .player-card {
+        position: static;
+        padding: 20px;
+        border-radius: 14px;
+    }
+
+    .playlist-sidebar {
+        max-height: 420px;
+        padding: 16px;
+    }
+
+    .song-title {
+        font-size: 18px;
+    }
+
+    .play-btn {
+        width: 60px;
+        height: 60px;
+    }
+    
+    .player-controls {
+        gap: 12px;
+        margin-bottom: 16px;
+        height: 100px;
+    }
+}
+
+/* Small Phones */
+@media (max-width: 480px) {
+    .player-container-wrapper {
+        padding: 0px 8px;
+        margin-top: 0;
+    }
+
+    .player-card {
+        padding: 16px 16px;
+    }
+
+    .song-title {
+        font-size: 16px;
+    }
+
+    .playlist-sidebar {
+        max-height: 320px;
+    }
+
+    .tile .title {
+        font-size: 13px;
+    }
+
+    .tile .subtitle {
+        font-size: 11px;
+    }
+}

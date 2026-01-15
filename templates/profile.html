@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile - Music Streaming Service</title>
+
+    <!-- Flask static CSS imports -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/fonts.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/mobile-fixes.css') }}">
+
+    <!-- Google Fonts (external is fine) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap"
+        rel="stylesheet">
+</head>
+
+
+<body style="margin:0; padding:0; background:#121212; font-family:Arial, sans-serif; color:#fff;">
+
+    <!-- Mobile header with hamburger -->
+    <div class="mobile-header" id="mobileHeaderContainer">
+        <button class="hamburger-btn" id="hamburgerBtn">☰</button>
+        <div class="mobile-logo">
+            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="#1db954" class="bi bi-apple-music" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M16 7.5a.5.5 0 0 1-.5.5h-1.027a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5H15.5a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1.527a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5H15.5a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1.527a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5H15.5a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-1 0v-.5h-1a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5h1v-1h-1a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5h1v-1h-1a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5h1v-1h-1a.5.5 0 0 1-.5-.5V8a.5.5 0 0 1 .5-.5h1V6.5h-1a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5h1.527a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5H14.5a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 1-.5-.5V3a.5.5 0 0 1 1 0v.5h1a.5.5 0 0 0 .5.5z"/></svg>
+            <span>Spotified</span>
+        </div>
+    </div>
+
+    <!-- Mobile drawer overlay -->
+    <div class="drawer-overlay" id="drawerOverlay"></div>
+
+    <!-- Mobile drawer sidebar -->
+    <div class="mobile-drawer" id="mobileDrawer">
+        <div class="drawer-section">Playlists</div>
+        <div id="mobileDrawerPlaylists"></div>
+    </div>
+
+    <div class="sidebar">
+
+        <div class="logo-container">
+            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="currentColor" class="bi bi-apple-music"
+                viewBox="0 0 16 16">
+                <path fill-rule="evenodd"
+                    d="m10.995 0 .573.001q.241 0 .483.007c.35.01.705.03 1.051.093.352.063.68.166.999.329a3.36 3.36 0 0 1 1.47 1.468c.162.32.265.648.328 1 .063.347.084.7.093 1.051q.007.241.007.483l.001.573v5.99l-.001.573q0 .241-.008.483c-.01.35-.03.704-.092 1.05a3.5 3.5 0 0 1-.33 1 3.36 3.36 0 0 1-1.468 1.468 3.5 3.5 0 0 1-1 .33 7 7 0 0 1-1.05.092q-.241.007-.483.008l-.573.001h-5.99l-.573-.001q-.241 0-.483-.008a7 7 0 0 1-1.052-.092 3.6 3.6 0 0 1-.998-.33 3.36 3.36 0 0 1-1.47-1.468 3.6 3.6 0 0 1-.328-1 7 7 0 0 1-.093-1.05Q.002 11.81 0 11.568V5.005l.001-.573q0-.241.007-.483c.01-.35.03-.704.093-1.05a3.6 3.6 0 0 1 .329-1A3.36 3.36 0 0 1 1.9.431 3.5 3.5 0 0 1 2.896.1 7 7 0 0 1 3.95.008Q4.19.002 4.432 0h.573zm-.107 2.518-4.756.959H6.13a.66.66 0 0 0-.296.133.5.5 0 0 0-.16.31c-.004.027-.01.08-.01.16v5.952c0 .14-.012.275-.106.39-.095.115-.21.15-.347.177l-.31.063c-.393.08-.65.133-.881.223a1.4 1.4 0 0 0-.519.333 1.25 1.25 0 0 0-.332.995c.031.297.166.582.395.792.156.142.35.25.578.296.236.047.49.031.858-.043.196-.04.38-.102.555-.205a1.4 1.4 0 0 0 .438-.405 1.5 1.5 0 0 0 .233-.55c.042-.202.052-.386.052-.588V6.347c0-.276.08-.35.302-.404.024-.005 3.954-.797 4.138-.833.257-.049.378.025.378.294v3.524c0 .14-.001.28-.096.396-.094.115-.211.15-.348.178l-.31.062c-.393.08-.649.133-.88.223a1.4 1.4 0 0 0-.52.334 1.26 1.26 0 0 0-.34.994c.03.297.174.582.404.792a1.2 1.2 0 0 0 .577.294c.237.048.49.03.858-.044.197-.04.381-.098.556-.202a1.4 1.4 0 0 0 .438-.405q.173-.252.233-.549a2.7 2.7 0 0 0 .044-.589V2.865c0-.273-.143-.443-.4-.42-.04.003-.383.064-.424.073" />
+            </svg>
+            <div>
+                <p class="ubuntu-regular">Spotified</p>
+            </div>
+        </div>
+
+
+        <div class="sidebar-section">
+            <b>Playlists</b>
+        </div>
+
+        <div class="sidebar-section" id="playlists-container">
+            <!-- Playlists will be loaded here -->
+        </div>
+    </div>
+
+    <div style="margin-left:240px; padding-left: 20px; width: 85%;">
+        <header class="header-container">
+            <div class="home">
+                <a href="/" style="color: inherit; text-decoration: none;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor"
+                        class="bi bi-house-door-fill" viewBox="0 0 16 16">
+                        <path
+                            d="M6.5 14.5v-3.505c0-.245.25-.495.5-.495h2c.25 0 .5.25.5.5v3.5a.5.5 0 0 0 .5.5h4a.5.5 0 0 0 .5-.5v-7a.5.5 0 0 0-.146-.354L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293L8.354 1.146a.5.5 0 0 0-.708 0l-6 6A.5.5 0 0 0 1.5 7.5v7a.5.5 0 0 0 .5.5h4a.5.5 0 0 0 .5-.5" />
+                    </svg>
+                </a>
+            </div>
+            <div class="search-bar">
+                <input type="search" placeholder="What do you want to listen to?" aria-label="Search">
+                <button type="submit" aria-label="Search">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                        class="bi bi-search" viewBox="0 0 16 16">
+                        <path
+                            d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0" />
+                    </svg>
+                </button>
+            </div>
+            <div class="upload-button" style="margin-right:12px;">
+                <button id="globalUploadBtn" title="Upload music"
+                    style="background:none;border:none;cursor:pointer;color:inherit;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor"
+                        class="bi bi-file-earmark-arrow-up-fill" viewBox="0 0 16 16">
+                        <path
+                            d="M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707A1 1 0 0 0 13.707 4L10 .293A1 1 0 0 0 9.293 0M9.5 3.5v-2l3 3h-2a1 1 0 0 1-1-1M6.354 9.854a.5.5 0 0 1-.708-.708l2-2a.5.5 0 0 1 .708 0l2 2a.5.5 0 0 1-.708.708L8.5 8.707V12.5a.5.5 0 0 1-1 0V8.707z" />
+                    </svg>
+                </button>
+            </div>
+            <div class="user-avatar">
+                <img src="https://ui-avatars.com/api/?name=John+Doe" alt="User Avatar"
+                    style="width:32px; height:32px; border-radius:50%;">
+            </div>
+        </header>
+
+        <input type="file" id="globalFileInput" multiple accept=".mp3,.flac,.m4a,.wav" style="display:none;">
+
+
+        <main style="padding-top:20px;">
+            <section>
+                <div class="browse-all-title">Your Profile</div>
+                <br>
+                <div class="profile-info" style="background:#282828; padding:20px; border-radius:8px;">
+                    <img id="profile-avatar" src="https://ui-avatars.com/api/?name=John+Doe" alt="Profile Avatar"
+                        style="width:100px; height:100px; border-radius:50%; margin-bottom:20px;">
+                    <h2 id="profile-name">John Doe</h2>
+                    <p>Email: john.doe@example.com</p>
+                    <p>Joined: January 2023</p>
+                    <p>Favorite Genres: Pop, Hip-Hop</p>
+                    <button
+                        style="background:#1db954; color:#fff; border:none; padding:10px 20px; border-radius:20px; margin-top:20px;">Edit
+                        Profile</button>
+                </div>
+            </section>
+        </main>
+
+    </div>
+
+</body>
+
+<script>
+    // ========== AUTHENTICATION HELPERS ==========
+    function getAuthToken() {
+        return localStorage.getItem('auth_token');
+    }
+
+    async function callAPI(url, options = {}) {
+        const token = getAuthToken();
+        if (!token) {
+            window.location.href = '/login';
+            return null;
+        }
+
+        const headers = options.headers || {};
+        headers['Authorization'] = `Bearer ${token}`;
+        if (!headers['Content-Type'] && options.body && typeof options.body === 'string') {
+            headers['Content-Type'] = 'application/json';
+        }
+
+        const response = await fetch(url, { ...options, headers });
+
+        if (response.status === 401) {
+            localStorage.removeItem('auth_token');
+            localStorage.removeItem('user');
+            window.location.href = '/login';
+            return null;
+        }
+
+        if (response.status === 403) {
+            console.error('Access denied');
+            return null;
+        }
+
+        return response;
+    }
+
+    function checkAuth() {
+        const token = getAuthToken();
+        if (!token) {
+            window.location.href = '/login';
+            return false;
+        }
+        return true;
+    }
+
+    // ========== APPLICATION FUNCTIONS ==========
+    function renderPlaylists(playlists) {
+        const container = document.getElementById('playlists-container');
+        container.innerHTML = '';
+        playlists.forEach(playlist => {
+            const div = document.createElement('div');
+            div.className = 'sidebar-playlist';
+            div.innerHTML = `
+            <div style="background: linear-gradient(135deg, #1db954, #1ed760); width:36px; height:36px; border-radius:4px; display:flex; align-items:center; justify-content:center;">
+                <span style="color:white; font-size:18px;">♪</span>
+            </div>
+            <a href="/playlists?id=${playlist.id}" class="sidebar-link">
+                <span class="sidebar-link-text">${playlist.name}</span>
+            </a>
+        `;
+            container.appendChild(div);
+        });
+    }
+
+    async function loadData() {
+        if (!checkAuth()) return;
+        try {
+            const [playlistsRes, userRes] = await Promise.all([
+                callAPI('/api/user/playlists'),
+                callAPI('/api/user')
+            ]);
+            
+            if (!playlistsRes || !playlistsRes.ok) {
+                return;
+            }
+            
+            const playlists = await playlistsRes.json();
+            const user = await userRes.json();
+            
+            renderPlaylists(playlists);
+            
+            document.querySelector('.user-avatar img').src = user.avatar;
+            document.getElementById('profile-avatar').src = user.avatar;
+            document.getElementById('profile-name').textContent = user.name;
+        } catch (error) {
+            console.error('Error loading data:', error);
+        }
+    }
+
+    window.addEventListener('load', loadData);
+
+    // Search functionality
+    const searchInput = document.querySelector('.search-bar input');
+    const searchButton = document.querySelector('.search-bar button');
+
+    searchButton.addEventListener('click', async () => {
+        const query = searchInput.value.trim();
+        if (!query) return;
+        try {
+            const res = await callAPI(`/api/search?q=${encodeURIComponent(query)}`);
+            if (!res) return;
+            const data = await res.json();
+            alert(`Artists: ${data.artists.map(a => a.name).join(', ')}\nPlaylists: ${data.playlists.map(p => p.name).join(', ')}`);
+        } catch (error) {
+            console.error('Search error:', error);
+        }
+    });
+
+    searchInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            searchButton.click();
+        }
+    });
+
+    // Global upload button wiring
+    const globalBtn = document.getElementById('globalUploadBtn');
+    const globalInput = document.getElementById('globalFileInput');
+    if (globalBtn && globalInput) {
+        globalBtn.addEventListener('click', () => globalInput.click());
+        globalInput.addEventListener('change', async (e) => {
+            const files = e.target.files;
+            if (!files || files.length === 0) return;
+            if (typeof handleFileUpload === 'function') { handleFileUpload(files); return; }
+            const formData = new FormData();
+            for (let f of files) formData.append('files', f);
+            try {
+                const res = await callAPI('/api/user/songs/upload', { method: 'POST', body: formData });
+                if (res && res.ok) { alert('Upload started — check Your Music'); window.location.reload(); }
+                else { const err = await res.json(); alert('Upload failed: ' + (err.error || 'unknown')); }
+            } catch (err) { alert('Upload failed'); }
+        });
+    }
+
+    // Mobile hamburger and drawer setup
+    function setupMobileHamburger() {
+        const mobileHeader = document.getElementById('mobileHeaderContainer');
+        const hamburgerBtn = document.getElementById('hamburgerBtn');
+        const mobileDrawer = document.getElementById('mobileDrawer');
+        const drawerOverlay = document.getElementById('drawerOverlay');
+        const mobileDrawerPlaylists = document.getElementById('mobileDrawerPlaylists');
+
+        if (!mobileHeader || !hamburgerBtn) return;
+
+        function showHeader() {
+            mobileHeader.style.display = window.innerWidth <= 992 ? 'flex' : 'none';
+        }
+
+        function renderDrawerPlaylists(playlists) {
+            mobileDrawerPlaylists.innerHTML = '';
+            playlists.forEach(playlist => {
+                const link = document.createElement('a');
+                link.className = 'drawer-playlist';
+                link.href = `/playlists?id=${playlist.id}`;
+                link.innerHTML = `
+                    <img src="${playlist.cover}" alt="${playlist.name}">
+                    <div class="drawer-playlist-name">${playlist.name}</div>
+                `;
+                link.addEventListener('click', closeDrawer);
+                mobileDrawerPlaylists.appendChild(link);
+            });
+        }
+
+        function openDrawer() {
+            mobileDrawer.classList.add('open');
+            drawerOverlay.classList.add('show');
+        }
+
+        function closeDrawer() {
+            mobileDrawer.classList.remove('open');
+            drawerOverlay.classList.remove('show');
+        }
+
+        hamburgerBtn.addEventListener('click', openDrawer);
+        drawerOverlay.addEventListener('click', closeDrawer);
+
+        showHeader();
+        window.addEventListener('resize', showHeader);
+
+        // Load playlists for drawer
+        const token = localStorage.getItem('auth_token');
+        if (token) {
+            fetch('/api/user/playlists', {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            })
+                .then(res => res.json())
+                .then(playlists => renderDrawerPlaylists(playlists))
+                .catch(err => console.error('Error loading drawer playlists:', err));
+        }
+    }
+
+    setupMobileHamburger();
+</script>
+
+</html>

@@ -1,0 +1,184 @@
+/* Mobile: hamburger menu with modern drawer sidebar */
+@media (max-width: 992px) {
+    body {
+        padding-top: 56px !important;
+    }
+
+    /* Hide the original desktop sidebar completely */
+    .sidebar {
+        display: none !important;
+    }
+
+    /* Modern fixed header with hamburger button */
+    .mobile-header {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 56px;
+        background-color: #000;
+        border-bottom: 1px solid #282828;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 12px;
+        z-index: 1100;
+        width: 100%;
+    }
+
+    .hamburger-btn {
+        background: none;
+        border: none;
+        color: #fff;
+        font-size: 24px;
+        cursor: pointer;
+        padding: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+    }
+
+    .hamburger-btn:hover {
+        background-color: #282828;
+        border-radius: 6px;
+    }
+
+    .mobile-logo {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex-grow: 1;
+        font-size: 16px;
+        font-weight: bold;
+        color: #fff;
+    }
+
+    .mobile-logo svg {
+        width: auto;
+        height: 10%;
+    }
+
+    /* Modern drawer sidebar that slides from left */
+    .mobile-drawer {
+        position: fixed;
+        left: -280px;
+        top: 56px;
+        width: 280px;
+        height: 100vh;
+        background-color: #121212;
+        border-right: 1px solid #282828;
+        z-index: 1050;
+        overflow-y: auto;
+        transition: left 0.3s ease;
+        padding: 16px 0;
+    }
+
+    .mobile-drawer.open {
+        left: 0;
+    }
+
+    .drawer-overlay {
+        position: fixed;
+        top: 56px;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(0, 0, 0, 0.6);
+        z-index: 1040;
+        display: none;
+    }
+
+    .drawer-overlay.show {
+        display: block;
+    }
+
+    .drawer-section {
+        padding: 12px 16px;
+        color: #b3b3b3;
+        font-size: 12px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-top: 8px;
+    }
+
+    .drawer-section:first-child {
+        margin-top: 0;
+    }
+
+    .drawer-playlist {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 12px 16px;
+        cursor: pointer;
+        transition: background-color 0.2s;
+        text-decoration: none;
+        color: #b3b3b3;
+    }
+
+    .drawer-playlist:hover {
+        background-color: #282828;
+        color: #fff;
+    }
+
+    .drawer-playlist img {
+        width: 36px;
+        height: 36px;
+        border-radius: 4px;
+        object-fit: cover;
+    }
+
+    .drawer-playlist-name {
+        flex-grow: 1;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    /* Override template inline margin-left to avoid horizontal offset on mobile */
+    .sidebar + div {
+        margin-left: 0 !important;
+        width: 100% !important;
+        padding-left: 12px !important;
+    }
+
+    /* Hide the desktop header, we'll use mobile header instead */
+    .header-container {
+        display: none !important;
+    }
+
+    /* Hide bottom mobile menu (the blue buttons) */
+    #mobileMenu {
+        display: none !important;
+    }
+
+    /* Slightly reduce main content padding for small screens */
+    main {
+        padding-top: 12px !important;
+    }
+}
+
+/* Desktop: hide all mobile elements */
+@media (min-width: 993px) {
+    .mobile-header {
+        display: none !important;
+    }
+
+    .mobile-drawer {
+        display: none !important;
+    }
+
+    .drawer-overlay {
+        display: none !important;
+    }
+
+    #mobileMenu {
+        display: none !important;
+    }
+
+    body {
+        padding-top: 0 !important;
+    }
+}
