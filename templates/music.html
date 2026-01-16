@@ -6,6 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Music Player - Spotified</title>
 
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+
     <!-- Flask static CSS imports -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/fonts.css') }}">
@@ -401,13 +403,7 @@
         }
 
         // Sempre que a música mudar:
-        nextBtn.addEventListener('click', () => {
-            currentSongIndex = (currentSongIndex + 1) % playlist.length;
-            loadSong(playlist[currentSongIndex]);
-            updatePlaylistHighlight();
-            saveCurrentSong();
-            play();
-        });
+        nextBtn.addEventListener('click', nextSong);
 
         prevBtn.addEventListener('click', () => {
             currentSongIndex = (currentSongIndex - 1 + playlist.length) % playlist.length;
@@ -443,6 +439,22 @@
             updatePlayButton();
         }
 
+        function nextSong() {
+            currentSongIndex = (currentSongIndex + 1) % playlist.length;
+            loadSong(playlist[currentSongIndex]);
+            updatePlaylistHighlight();
+            saveCurrentSong();
+            play();
+        }
+
+        function previusSong() {
+            currentSongIndex = (currentSongIndex - 1) % playlist.length;
+            loadSong(playlist[currentSongIndex]);
+            updatePlaylistHighlight();
+            saveCurrentSong();
+            play();
+        }
+
         function updatePlayButton() {
             document.querySelector('.play-icon').style.display = isPlaying ? 'none' : 'block';
             document.querySelector('.pause-icon').style.display = isPlaying ? 'block' : 'none';
@@ -453,19 +465,9 @@
             else play();
         });
 
-        nextBtn.addEventListener('click', () => {
-            currentSongIndex = (currentSongIndex + 1) % playlist.length;
-            loadSong(playlist[currentSongIndex]);
-            updatePlaylistHighlight();
-            play();
-        });
+        nextBtn.addEventListener('click', nextSong);
 
-        prevBtn.addEventListener('click', () => {
-            currentSongIndex = (currentSongIndex - 1 + playlist.length) % playlist.length;
-            loadSong(playlist[currentSongIndex]);
-            updatePlaylistHighlight();
-            play();
-        });
+        prevBtn.addEventListener('click', previusSong);
 
         // ========== PROGRESS BAR ==========
         audioPlayer.addEventListener('loadedmetadata', () => {
@@ -484,9 +486,7 @@
             audioPlayer.currentTime = percent * audioPlayer.duration;
         });
 
-        audioPlayer.addEventListener('ended', () => {
-            nextBtn.click();
-        });
+        audioPlayer.addEventListener('ended', nextSong);
 
         // Captura erros de play e load
         audioPlayer.addEventListener('error', () => {
