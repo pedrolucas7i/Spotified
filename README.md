@@ -2,6 +2,8 @@
 
 A web-based music streaming service built with Flask, allowing users to upload, organize, and stream their music collection.
 
+![alt text](Preview/rootpage.png)
+
 ## Features
 
 - **User Authentication**: Secure user registration and login system
