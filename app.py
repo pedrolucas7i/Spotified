@@ -41,7 +41,7 @@ init_db()
 
 # CORS Configuration - More restrictive
 CORS(app, 
-    resources={r"/api/*": {"origins": os.environ.get('ALLOWED_ORIGINS', 'http://localhost:5000').split(',')}},
+    resources={r"/api/*": {"origins": os.environ.get('ALLOWED_ORIGINS', 'http://localhost:8080').split(',')}},
     supports_credentials=True,
     allow_headers=['Content-Type', 'Authorization'],
     expose_headers=['Content-Type']
