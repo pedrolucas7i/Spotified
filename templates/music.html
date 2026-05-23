@@ -269,22 +269,25 @@
             const storedPlaylist = sessionStorage.getItem('playlistSongs');
             const startIndex = sessionStorage.getItem('playlistStartIndex');
 
-            if (storedPlaylist) {
+            if (storedPlaylist && startIndex !== null) {
+
                 playlist = JSON.parse(storedPlaylist);
-                currentSongIndex = Number.isInteger(+startIndex) ? +startIndex : 0;
+                currentSongIndex = parseInt(startIndex);
 
                 renderPlaylist();
                 loadSong(playlist[currentSongIndex]);
-                play();
                 updatePlaylistHighlight();
+
+                play();
+
+                sessionStorage.removeItem('playlistSongs');
+                sessionStorage.removeItem('playlistStartIndex');
+
                 return;
             }
 
-            // fallback: user's full library
-            loadPlaylist();
+            loadSavedSong();
         }
-
-
 
         function loadSong(song) {
             // textContent é seguro por definição (no HTML injection)
@@ -632,7 +635,7 @@
 
         // ========== INITIALIZE ==========
         window.addEventListener('load', () => {
-            loadSavedSong();
+            loadInitialSong();
             const avatarUrl = 'https://ui-avatars.com/api/?name=User';
             document.getElementById('avatarImg').src = avatarUrl;
             document.getElementById('avatarImgDesktop').src = avatarUrl;
