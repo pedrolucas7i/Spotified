@@ -292,6 +292,8 @@
             songArtist.textContent = song.artist || '';
             songAlbum.textContent = song.album || 'Unknown Album';
 
+            document.title = `${song.title || 'No Song'} - ${song.artist || ''} | Spotified`;
+
             const coverImg = song.cover_url;
 
             albumCover.innerHTML = `
