@@ -405,13 +405,7 @@
         // Sempre que a música mudar:
         nextBtn.addEventListener('click', nextSong);
 
-        prevBtn.addEventListener('click', () => {
-            currentSongIndex = (currentSongIndex - 1 + playlist.length) % playlist.length;
-            loadSong(playlist[currentSongIndex]);
-            updatePlaylistHighlight();
-            saveCurrentSong();
-            play();
-        });
+        prevBtn.addEventListener('click', previusSong);
 
         // Também quando clicar numa música diretamente
         playlistContainer.addEventListener('click', (e) => {
