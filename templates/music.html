@@ -307,6 +307,7 @@
             const token = getToken();
             audioPlayer.src = `/api/songs/${song.id}/play?token=${encodeURIComponent(token)}`;
             audioPlayer.load();
+            saveCurrentSong();
         }
 
 
@@ -386,21 +387,48 @@
         function saveCurrentSong() {
             localStorage.setItem('currentSongIndex', currentSongIndex);
             localStorage.setItem('currentPlaylist', JSON.stringify(playlist));
+
+            // guardar tempo atual
+            localStorage.setItem('currentSongTime', audioPlayer.currentTime);
+
+            // guardar estado play/pause
+            localStorage.setItem('wasPlaying', isPlaying);
         }
 
         function loadSavedSong() {
             const savedPlaylist = localStorage.getItem('currentPlaylist');
             const savedIndex = localStorage.getItem('currentSongIndex');
+            const savedTime = localStorage.getItem('currentSongTime');
+            const wasPlaying = localStorage.getItem('wasPlaying') === 'true';
 
             if (savedPlaylist && savedIndex !== null) {
                 playlist = JSON.parse(savedPlaylist);
                 currentSongIndex = Number(savedIndex);
+
                 renderPlaylist();
-                loadSong(playlist[currentSongIndex]);
-                updatePlaylistHighlight();
-                // Não tocar automaticamente para respeitar interação do usuário
+
+                const song = playlist[currentSongIndex];
+
+                if (song) {
+                    loadSong(song);
+                    updatePlaylistHighlight();
+
+                    // quando metadata carregar
+                    audioPlayer.addEventListener('loadedmetadata', () => {
+                        if (savedTime) {
+                            audioPlayer.currentTime = parseFloat(savedTime);
+                        }
+
+                        // continuar automaticamente
+                        if (wasPlaying) {
+                            play().catch(err => {
+                                console.log('Autoplay bloqueado pelo browser:', err);
+                            });
+                        }
+                    }, { once: true });
+                }
             } else {
-                loadPlaylist(); // fallback
+                loadPlaylist();
             }
         }
 
@@ -576,9 +604,16 @@
 
         setupLogout();
 
+        audioPlayer.addEventListener('timeupdate', () => {
+            const percent = (audioPlayer.currentTime / audioPlayer.duration) * 100;
+            progressFill.style.width = percent + '%';
+            currentTimeEl.textContent = formatTime(audioPlayer.currentTime);
+            saveCurrentSong();
+        });
+
         // ========== INITIALIZE ==========
         window.addEventListener('load', () => {
-            loadInitialSong();
+            loadSavedSong();
             const avatarUrl = 'https://ui-avatars.com/api/?name=User';
             document.getElementById('avatarImg').src = avatarUrl;
             document.getElementById('avatarImgDesktop').src = avatarUrl;
