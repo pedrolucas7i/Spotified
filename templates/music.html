@@ -443,9 +443,9 @@
             if (!tile) return;
             const index = Number(tile.id.split('-')[1]);
             currentSongIndex = index;
+            saveCurrentSong();
             loadSong(playlist[index]);
             updatePlaylistHighlight();
-            saveCurrentSong();
             play();
         });
 
