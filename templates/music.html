@@ -452,15 +452,15 @@
 
         // ========== PLAYER CONTROLS ==========
         function play() {
-            audioPlayer.play();
             isPlaying = true;
             updatePlayButton();
+            return audioPlayer.play();
         }
 
         function pause() {
-            audioPlayer.pause();
             isPlaying = false;
             updatePlayButton();
+            return audioPlayer.pause();
         }
 
         function nextSong() {
@@ -611,12 +611,44 @@
             saveCurrentSong();
         });
 
+        if ('mediaSession' in navigator) {
+
+            navigator.mediaSession.setActionHandler('play', () => {
+                play();
+            });
+
+            navigator.mediaSession.setActionHandler('pause', () => {
+                pause();
+            });
+
+            navigator.mediaSession.setActionHandler('nexttrack', () => {
+                nextSong();
+            });
+
+            navigator.mediaSession.setActionHandler('previoustrack', () => {
+                previusSong();
+            });
+        }
+
         // ========== INITIALIZE ==========
         window.addEventListener('load', () => {
             loadSavedSong();
             const avatarUrl = 'https://ui-avatars.com/api/?name=User';
             document.getElementById('avatarImg').src = avatarUrl;
             document.getElementById('avatarImgDesktop').src = avatarUrl;
+
+            navigator.mediaSession.metadata = new MediaMetadata({
+                title: song.title || 'Unknown Song',
+                artist: song.artist || 'Unknown Artist',
+                album: song.album || 'Unknown Album',
+
+                artwork: [
+                    { src: song.cover_url, sizes: '96x96', type: 'image/png' },
+                    { src: song.cover_url, sizes: '128x128', type: 'image/png' },
+                    { src: song.cover_url, sizes: '256x256', type: 'image/png' },
+                    { src: song.cover_url, sizes: '512x512', type: 'image/png' }
+                ]
+            });
         });
     </script>
 
