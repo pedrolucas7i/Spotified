@@ -260,7 +260,7 @@ body {
     }
 
     .playlist-sidebar {
-        max-height: 420px;
+        max-height: 60vh;
         padding: 16px;
     }
 
@@ -296,7 +296,7 @@ body {
     }
 
     .playlist-sidebar {
-        max-height: 320px;
+        max-height: 60vh;
     }
 
     .tile .title {

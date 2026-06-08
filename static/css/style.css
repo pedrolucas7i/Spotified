@@ -1,136 +1,3 @@
-/* Responsive styles for mobile devices */
-@media (max-width: 992px) {
-    body {
-        flex-direction: column;
-        height: auto;
-        /* reserve space for the fixed top sidebar */
-        padding-top: 72px;
-    }
-
-    /* Make sidebar horizontal and behave as a top bar on small screens */
-    .sidebar {
-        width: 100% !important;
-        padding: 6px 10px !important;
-        display: flex !important;
-        flex-direction: row !important;
-        align-items: center;
-        justify-content: flex-start;
-        gap: 12px;
-        position: fixed !important;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 64px;
-        z-index: 1000;
-        background-color: #000;
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-    }
-
-    .sidebar .logo-container {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-    }
-
-    /* Keep sidebar sections visible but compact on mobile */
-    .sidebar-section {
-        display: block;
-        max-height: 64px;
-        overflow-x: auto;
-        white-space: nowrap;
-    }
-
-    /* Ensure content fills full width (override inline margin-left on templates) */
-    div[style*="margin-left:240px"] {
-        margin-left: 0 !important;
-        padding-left: 12px !important;
-        width: 100% !important;
-    }
-
-    /* Header stacks on mobile */
-    .header-container {
-        padding: 12px !important;
-        display: flex !important;
-        flex-direction: row !important;
-        align-items: center !important;
-        gap: 8px;
-    }
-
-    .header-container .home {
-        flex: 0 0 auto;
-    }
-
-    .header-container .search-bar {
-        flex: 1 1 auto;
-        min-width: 0;
-    }
-
-    .search-bar input[type="search"] {
-        width: 100% !important;
-    }
-
-    .upload-button {
-        order: 3;
-        margin-right: 8px;
-    }
-
-    .user-avatar {
-        order: 4;
-        margin-left: 0;
-    }
-
-    /* Make touch targets larger */
-    .upload-button button,
-    .search-bar button,
-    .user-avatar img {
-        min-width: 40px;
-        min-height: 40px;
-        padding: 6px;
-    }
-
-    /* Make cards responsive */
-    .category-card,
-    .card,
-    .tile {
-        width: 140px !important;
-        height: auto !important;
-    }
-
-    /* Adjust browse rows to wrap on mobile */
-    .browse-all {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 12px;
-    }
-    .mobile-header>.search-bar {
-        width: 80%;
-    }
-}
-
-/* Smaller phones */
-@media (max-width: 480px) {
-    .search-bar input[type="search"] {
-        font-size: 14px;
-        padding: 8px;
-    }
-
-    .browse-all-title {
-        font-size: 18px;
-    }
-
-    .sidebar-playlist img {
-        width: 36px;
-        height: 36px;
-    }
-
-    .mobile-header>.search-bar {
-        width: 40%;
-    }
-}
-
-
-/* General Reset */
 * {
     margin: 0;
     padding: 0;
@@ -776,4 +643,137 @@ section {
 
 .mobile-header>.search-bar {
     padding: 2.5px;
+}
+
+/* Responsive styles for mobile devices */
+@media (max-width: 992px) {
+    body {
+        flex-direction: column;
+        height: auto;
+        /* reserve space for the fixed top sidebar */
+        padding-top: 72px;
+        height: 150vh !important;
+    }
+
+    /* Make sidebar horizontal and behave as a top bar on small screens */
+    .sidebar {
+        width: 100% !important;
+        padding: 6px 10px !important;
+        display: flex !important;
+        flex-direction: row !important;
+        align-items: center;
+        justify-content: flex-start;
+        gap: 12px;
+        position: fixed !important;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 64px;
+        z-index: 1000;
+        background-color: #000;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .sidebar .logo-container {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    /* Keep sidebar sections visible but compact on mobile */
+    .sidebar-section {
+        display: block;
+        max-height: 64px;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+
+    /* Ensure content fills full width (override inline margin-left on templates) */
+    div[style*="margin-left:240px"] {
+        margin-left: 0 !important;
+        padding-left: 12px !important;
+        width: 100% !important;
+    }
+
+    /* Header stacks on mobile */
+    .header-container {
+        padding: 12px !important;
+        display: flex !important;
+        flex-direction: row !important;
+        align-items: center !important;
+        gap: 8px;
+    }
+
+    .header-container .home {
+        flex: 0 0 auto;
+    }
+
+    .header-container .search-bar {
+        flex: 1 1 auto;
+        min-width: 0;
+    }
+
+    .search-bar input[type="search"] {
+        width: 100% !important;
+    }
+
+    .upload-button {
+        order: 3;
+        margin-right: 8px;
+    }
+
+    .user-avatar {
+        order: 4;
+        margin-left: 0;
+    }
+
+    /* Make touch targets larger */
+    .upload-button button,
+    .search-bar button,
+    .user-avatar img {
+        min-width: 40px;
+        min-height: 40px;
+        padding: 6px;
+    }
+
+    /* Make cards responsive */
+    .category-card,
+    .card,
+    .tile {
+        width: 140px !important;
+        height: auto !important;
+    }
+
+    /* Adjust browse rows to wrap on mobile */
+    .browse-all {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+
+    .mobile-header>.search-bar {
+        width: 80%;
+    }
+}
+
+/* Smaller phones */
+@media (max-width: 480px) {
+    .search-bar input[type="search"] {
+        font-size: 14px;
+        padding: 8px;
+    }
+
+    .browse-all-title {
+        font-size: 18px;
+    }
+
+    .sidebar-playlist img {
+        width: 36px;
+        height: 36px;
+    }
+
+    .mobile-header>.search-bar {
+        width: 40%;
+    }
 }
